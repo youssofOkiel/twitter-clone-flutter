@@ -1,9 +1,8 @@
 import 'dart:html';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class MyFeedPage extends StatefulWidget {
   const MyFeedPage({Key? key}) : super(key: key);
@@ -13,14 +12,13 @@ class MyFeedPage extends StatefulWidget {
 }
 
 class _MyFeedPageState extends State<MyFeedPage> {
-
   // final CollectionReference postsList = FirebaseFirestore.instance.collection('posts');
 
-  Future getAllposts() async{
+  Future getAllposts() async {
     // List myPost = [];
     // try{
     //     await postsList.get().then((value) {
-    //           value.docs.forEach((element) { 
+    //           value.docs.forEach((element) {
     //             myPost.add(element);
     //           });
     // });
@@ -30,7 +28,6 @@ class _MyFeedPageState extends State<MyFeedPage> {
     // catch(e){
     //   print(e);
     // }
-    
   }
 
   int _selectedIndex = 0;
@@ -230,13 +227,13 @@ class _MyFeedPageState extends State<MyFeedPage> {
         Row(
           children: [
             Flexible(
-              child:  Container(
-              child: Image.network(
-                'https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg',
-                fit: BoxFit.fitHeight,
+              child: Container(
+                child: Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg',
+                  fit: BoxFit.fitHeight,
+                ),
               ),
-            ),),
-          
+            ),
           ],
         ),
         Padding(
@@ -253,46 +250,150 @@ class _MyFeedPageState extends State<MyFeedPage> {
     ),
     Text("AddFollow")
   ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Home"),
-        elevation: 20,
-        automaticallyImplyLeading: false,
-        shadowColor: Colors.black,
-        backgroundColor: Color.fromARGB(255, 25, 128, 212),
-        foregroundColor: Color.fromARGB(255, 255, 255, 255),
-      ),
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference posts = FirebaseFirestore.instance.collection('posts');
 
-      body: Center(
-          child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: _pages.elementAt(_selectedIndex),
-      )),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedIconTheme:
-            IconThemeData(color: Color.fromARGB(255, 25, 128, 212)),
-        selectedItemColor: Color.fromARGB(255, 25, 128, 212),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add Followers',
-          ),
-        ],
-        currentIndex: _selectedIndex, //New
-        onTap: _onItemTapped, //New
-      ),
+    List<dynamic> allposts = [];
+    List<dynamic> newList;
+    Future<void> getData() async {
+      // Get docs from collection reference
+      QuerySnapshot querySnapshot = await posts.get();
+      // Get data from docs and convert map to List
+      List allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      allData.map((m) => allposts.add(m)).toList();
+    }
 
-      // This trailing comma makes auto-formatting ni  cer for build methods.
+    getData();
+
+
+    Future<DocumentSnapshot> getuser(id){
+        return users.doc(id).get();
+    }
+
+    return FutureBuilder<DocumentSnapshot>(
+      //Fetching data from the documentId specified of the student
+      future: users.doc('82cijLcdfq3kJtYZVPXf').get(),
+      
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        //Error Handling conditions
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Text("Document does not exist");
+        }
+
+        //Data is output to the user
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              // To add separation line between the ListView
+                              separatorBuilder: (context, index) =>
+                                  Divider(color: Colors.grey),
+
+                              itemCount: allposts.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text('${allposts[index]['senderId']}'),
+                                      ],
+                                    ),
+                                    Image(
+                                    image: NetworkImage(allposts[index]['image']),)
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Text('${data['username']}')
+                ],
+              ),
+            ),
+          );
+        }
+
+        return Container(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 260.0),
+                  child: SizedBox(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 7,
+                    ),
+                    height: 70.0,
+                    width: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text("Home"),
+    //     elevation: 20,
+    //     automaticallyImplyLeading: false,
+    //     shadowColor: Colors.black,
+    //     backgroundColor: Color.fromARGB(255, 25, 128, 212),
+    //     foregroundColor: Color.fromARGB(255, 255, 255, 255),
+    //   ),
+
+    //   body: Center(
+    //       child: SingleChildScrollView(
+    //     scrollDirection: Axis.vertical,
+    //     child: _pages.elementAt(_selectedIndex),
+    //   )),
+    //   bottomNavigationBar: BottomNavigationBar(
+    //     selectedIconTheme:
+    //         IconThemeData(color: Color.fromARGB(255, 25, 128, 212)),
+    //     selectedItemColor: Color.fromARGB(255, 25, 128, 212),
+    //     items: const <BottomNavigationBarItem>[
+    //       BottomNavigationBarItem(
+    //         icon: Icon(Icons.home),
+    //         label: 'Home',
+    //       ),
+    //       BottomNavigationBarItem(
+    //         icon: Icon(Icons.person),
+    //         label: 'Profile',
+    //       ),
+    //       BottomNavigationBarItem(
+    //         icon: Icon(Icons.add),
+    //         label: 'Add Followers',
+    //       ),
+    //     ],
+    //     currentIndex: _selectedIndex, //New
+    //     onTap: _onItemTapped, //New
+    //   ),
+
+    //   // This trailing comma makes auto-formatting ni  cer for build methods.
+    // );
   }
 }

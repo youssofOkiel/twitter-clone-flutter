@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "266766294682",
+    "firebase_url": "https://test-874ae-default-rtdb.firebaseio.com",
+    "project_id": "test-874ae",
+    "storage_bucket": "test-874ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266766294682:android:492922fae07a7932b88923",
+        "android_client_info": {
+          "package_name": "com.example.twitterapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266766294682-avosu6nfsme2tfkgqdgevfo8c6h0orks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAu53_p6ZqXGuG3b_m92JalaKhPP8FCas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266766294682-avosu6nfsme2tfkgqdgevfo8c6h0orks.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
