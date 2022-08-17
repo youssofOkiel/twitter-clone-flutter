@@ -264,19 +264,21 @@ class _MyFeedPageState extends State<MyFeedPage> {
       // Get data from docs and convert map to List
       List allData = querySnapshot.docs.map((doc) => doc.data()).toList();
       allData.map((m) => allposts.add(m)).toList();
+       allposts.retainWhere((element) { return element['senderId'] == '82cijLcdfq3kJtYZVPXf';});
     }
 
     getData();
 
+    Object? getuser(id)  {
+        Object? x;
+        users.doc(id).get().then((value) =>  x = value.data());
 
-    Future<DocumentSnapshot> getuser(id){
-        return users.doc(id).get();
+        return x;
     }
 
     return FutureBuilder<DocumentSnapshot>(
       //Fetching data from the documentId specified of the student
-      future: users.doc('82cijLcdfq3kJtYZVPXf').get(),
-      
+      future: users.doc('xaCpJqtB9jXdGU22yNIr').get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         //Error Handling conditions
@@ -313,11 +315,13 @@ class _MyFeedPageState extends State<MyFeedPage> {
                                   children: [
                                     Row(
                                       children: [
-                                        Text('${allposts[index]['senderId']}'),
+                                        Text((allposts[index]['text'])),
                                       ],
                                     ),
                                     Image(
-                                    image: NetworkImage(allposts[index]['image']),)
+                                      image: NetworkImage(
+                                          allposts[index]['image']),
+                                    )
                                   ],
                                 );
                               },

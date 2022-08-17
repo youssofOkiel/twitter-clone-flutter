@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 
 class MySignUpPage extends StatefulWidget {
   const MySignUpPage({Key? key}) : super(key: key);
-
 
   @override
   State<MySignUpPage> createState() => _MySignUpPageState();
@@ -16,12 +16,34 @@ class _MySignUpPageState extends State<MySignUpPage> {
   var password = TextEditingController();
   var rePassword = TextEditingController();
 
+  void setData() async {
+    Map<String, dynamic> data = {
+      'bio': "",
+      'displayName': name.text,
+      'email':email.text,
+      'followers': [],
+      'following': [],
+      'joined':'',
+      'password':password.text,
+      'photoURL': "",
+      'rooms': [],
+      'username':username.text,
+      'verified': true,
+      'is_active': true,
+      'wallpaper': "",
+    };
+    await FirebaseFirestore.instance
+    .collection('users').doc()
+    .set(
+        data
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Sign Up"),
-        
         elevation: 20,
         shadowColor: Colors.black,
         backgroundColor: Color.fromARGB(255, 25, 128, 212),
@@ -42,15 +64,12 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/768px-Twitter-logo.svg.png?20211104142029",
                         scale: 25)),
               ),
-              
-               
-                TextFormField(
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Name"),
-                  controller: name,
-                ),
-              
-                Padding(
+              TextFormField(
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: "Name"),
+                controller: name,
+              ),
+              Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
                   decoration: const InputDecoration(
@@ -58,7 +77,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   controller: username,
                 ),
               ),
-                Padding(
+              Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextFormField(
                   decoration: const InputDecoration(
@@ -75,11 +94,12 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   controller: password,
                 ),
               ),
-               Padding(
+              Padding(
                 padding: const EdgeInsets.only(bottom: 20, top: 15),
                 child: TextFormField(
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "confirm password"),
+                      border: OutlineInputBorder(),
+                      labelText: "confirm password"),
                   obscureText: true,
                   controller: rePassword,
                 ),
@@ -92,7 +112,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(7),
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {setData();},
                       child: Text("Sign up",
                           style: TextStyle(
                               color: Colors.white,
@@ -100,19 +120,23 @@ class _MySignUpPageState extends State<MySignUpPage> {
                               fontSize: 30)),
                     ),
                   )),
-          
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("if you already have one we can " ,style: TextStyle(color: Color.fromARGB(255, 141, 141, 141),)),
-                    TextButton(onPressed: () {
-                       Navigator.push(
+                    Text("if you already have one we can ",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 141, 141, 141),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MyHomePage()));
-                    }, child: Text("Login")),
+                        },
+                        child: Text("Login")),
                   ],
                 ),
               )
