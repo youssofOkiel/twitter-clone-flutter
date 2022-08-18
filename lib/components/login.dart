@@ -87,7 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(7),
                     child: MaterialButton(
                       onPressed: () {
-                        login();
+                        // login();
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyFeedPage()));
+            
                       },
                       child: Text("Login",
                           style: TextStyle(
