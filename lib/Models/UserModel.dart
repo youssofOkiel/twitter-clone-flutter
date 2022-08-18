@@ -2,28 +2,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   String id;
-  String name;
-  String profilePicture;
+  String username;
+  String photoURL;
   String email;
   String bio;
-  String coverImage;
+  String wallpaper;
+  List<String> followers;
+  List<String> following;
+
 
   UserModel(
-      {this.id,
-      this.name,
-      this.profilePicture,
-      this.email,
-      this.bio,
-      this.coverImage});
+      {this.id = "",
+      this.username = "",
+      this.photoURL ="",
+      this.email = "",
+      this.bio = "",
+      this.wallpaper = "",
+      this.followers = const [],
+      this.following = const []
+      });
 
   factory UserModel.fromDoc(DocumentSnapshot doc) {
     return UserModel(
       id: doc.id,
-      name: doc['name'],
+      username: doc['username'],
       email: doc['email'],
-      profilePicture: doc['profilePicture'],
+      photoURL: doc['photoURL'],
       bio: doc['bio'],
-      coverImage: doc['coverImage'],
+      wallpaper: doc['wallpaper'],
+      followers: doc['followers'],
+      following: doc['following']
     );
   }
 }
