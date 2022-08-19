@@ -5,11 +5,12 @@ import 'package:twitterapp/Services/firebase.dart';
 
 class TweetContainer extends StatefulWidget {
   final Tweet tweet;
-   UserModel? user;
+  final UserModel user;
   final String profileId;
 
-  TweetContainer({Key? key,required this.tweet ,this.profileId = ""})
+  TweetContainer({Key? key,required this.tweet ,required this.user, this.profileId = ""})
       : super(key: key);
+
   @override
   _TweetContainerState createState() => _TweetContainerState();
 }
@@ -62,11 +63,11 @@ class _TweetContainerState extends State<TweetContainer> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage("widget.user.photoURL"),
+                backgroundImage: NetworkImage(widget.user.photoURL),
               ),
               SizedBox(width: 10),
               Text(
-                "widget.user.username!",
+                widget.user.username,
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:twitterapp/components/home.dart';
+import 'package:twitterapp/components/profile.dart';
 
 class MyFeedPage extends StatefulWidget {
 
@@ -27,6 +28,16 @@ class _MyFeedPageState extends State<MyFeedPage> {
       body: [
         HomeScreen(
           profileId: widget.profileId,
+        ),
+        HomeScreen(
+          profileId: widget.profileId,
+        ),
+        HomeScreen(
+          profileId: widget.profileId,
+        ),
+        ProfileScreen(
+          profileId: widget.profileId,
+          visitedUserId: widget.profileId,
         ),
       ].elementAt(_selectedTab),
       bottomNavigationBar: CupertinoTabBar(

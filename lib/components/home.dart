@@ -20,23 +20,15 @@ class HomeScreenState extends State<HomeScreen> {
   List _followingTweets = [];
   bool _loading = false;
 
-  buildTweets(Tweet tweet) {
+  buildTweets(Tweet tweet, UserModel user) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: TweetContainer(
         tweet: tweet,
+        user: user,
         profileId: widget.profileId,
       ),
     );
-  }
-
-  showFollowingTweets(String currentUserId) {
-    List<Widget> followingTweetsList = [];
-    for (Tweet tweet in _followingTweets) {
-      followingTweetsList.add(buildTweets(tweet));
-    }
-
-    return followingTweetsList;
   }
 
   setupFollowingTweets() async {
@@ -44,31 +36,41 @@ class HomeScreenState extends State<HomeScreen> {
       _loading = true;
     });
 
+    print("setupFollowingTweets");
     List followingTweets = await FirebaseServices.getHomeTweets();
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
-    print("followingTweets.length");
     print(followingTweets.length);
-    if (true) {
-      setState(() {
-        _followingTweets = followingTweets;
-        _loading = false;
-      });
+
+    setState(() {
+      _followingTweets = followingTweets;
+      _loading = false;
+    });
+  }
+
+  showFollowingTweets(String currentUserId) {
+    List<Widget> followingTweetsList = [];
+    for (Tweet tweet in _followingTweets) {
+      followingTweetsList.add(FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(tweet.senderId)
+              .get(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              UserModel author = UserModel.fromDoc(snapshot.data);
+              return buildTweets(tweet, author);
+            } else {
+              return SizedBox.shrink();
+            }
+          }));
     }
+
+    return followingTweetsList;
   }
 
   @override
   void initState() {
     super.initState();
+    print("initState");
     setupFollowingTweets();
   }
 
@@ -78,7 +80,7 @@ class HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
-          child:SizedBox(),
+          child: SizedBox(),
           onPressed: () {
             Navigator.push(
                 context,
@@ -117,7 +119,7 @@ class HomeScreenState extends State<HomeScreen> {
                 children: [
                   SizedBox(height: 5),
                   Column(
-                    children:  showFollowingTweets(widget.profileId),
+                    children: showFollowingTweets(widget.profileId),
                   ),
                 ],
               )

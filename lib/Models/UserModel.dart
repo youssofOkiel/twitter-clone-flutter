@@ -7,8 +7,8 @@ class UserModel {
   String email;
   String bio;
   String wallpaper;
-  List<String> followers;
-  List<String> following;
+  List<dynamic> followers;
+  List<dynamic> following;
 
 
   UserModel(

@@ -6,7 +6,7 @@ class Tweet {
   String text;
   String image;
   String timestamp;
-  List<String> likes;
+  List<dynamic> likes;
 
   Tweet(
       {this.id = "",
