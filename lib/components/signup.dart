@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:twitterapp/Services/auth.dart';
 import 'login.dart';
 
 class MySignUpPage extends StatefulWidget {
@@ -10,34 +11,12 @@ class MySignUpPage extends StatefulWidget {
 }
 
 class _MySignUpPageState extends State<MySignUpPage> {
-  var name = TextEditingController();
-  var username = TextEditingController();
-  var email = TextEditingController();
-  var password = TextEditingController();
-  var rePassword = TextEditingController();
+  String displayName = "";
+  String username = "";
+  String email = "";
+  String password = "";
+  String rePassword = "";
 
-  void setData() async {
-    Map<String, dynamic> data = {
-      'bio': "",
-      'displayName': name.text,
-      'email':email.text,
-      'followers': [],
-      'following': [],
-      'joined':'',
-      'password':password.text,
-      'photoURL': "",
-      'rooms': [],
-      'username':username.text,
-      'verified': true,
-      'is_active': true,
-      'wallpaper': "",
-    };
-    await FirebaseFirestore.instance
-    .collection('users').doc()
-    .set(
-        data
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,43 +44,53 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         scale: 25)),
               ),
               TextFormField(
+                onChanged: (value) {
+                  displayName = value;
+                },
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: "Name"),
-                controller: name,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: TextFormField(
+                  onChanged: (value) {
+                    username = value;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "username"),
-                  controller: username,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextFormField(
+                  onChanged: (value) {
+                    email = value;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "email"),
-                  controller: email,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextFormField(
+                  onChanged: (value) {
+                    password = value;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "password"),
                   obscureText: true,
-                  controller: password,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20, top: 15),
                 child: TextFormField(
+                  onChanged: (value) {
+                    password = value;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "confirm password"),
                   obscureText: true,
-                  controller: rePassword,
                 ),
               ),
               Container(
@@ -112,7 +101,16 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(7),
                     child: MaterialButton(
-                      onPressed: () {setData();},
+                      onPressed: () async {
+                bool isValid =
+                    await AuthService.signUp(displayName, username,email,password);
+                if (isValid) {
+                  Navigator.pop(context);
+                  print('signup success');
+                } else {
+                  print('something wrong');
+                }
+              },
                       child: Text("Sign up",
                           style: TextStyle(
                               color: Colors.white,

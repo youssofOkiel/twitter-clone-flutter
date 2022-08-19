@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:twitterapp/Services/auth.dart';
 import 'signup.dart';
 import 'feed.dart';
 
@@ -11,27 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var email = TextEditingController();
-  var password = TextEditingController();
-  bool flag = false;
-  void login() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .where('email',isEqualTo:email.text)
-        .where('password' ,isEqualTo: password.text)
-        .get()
-        .then((value) => {
-          if(!(value.docs.isEmpty)) 
-        {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyFeedPage()))
-          }
-
-
-          });
-  }
+  String email = "";
+  String password = "";
 
   @override
   Widget build(BuildContext context) {
@@ -61,21 +44,25 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: TextFormField(
+                  onChanged: (value) {
+                    email = value;
+                  },
                   validator: (val) {
                     if (val == null || val.isEmpty) return 'Enter valid email';
                   },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "email"),
-                  controller: email,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30, top: 30),
                 child: TextFormField(
+                  onChanged: (value) {
+                    password = value;
+                  },
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(), labelText: "password"),
                   obscureText: true,
-                  controller: password,
                 ),
               ),
               Container(
@@ -86,9 +73,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Padding(
                     padding: const EdgeInsets.all(7),
                     child: MaterialButton(
-                      onPressed: () {
-                        login();
-                      },
+                      onPressed: () async {
+                          bool isValid = await AuthService.login(email, password);
+                          if (isValid) {
+                            print('login success');
+                            FirebaseAuth.instance.authStateChanges().listen((User? user) { 
+                                print(user!.uid);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                                  MyFeedPage(profileId: user.uid)
+                                ));
+                            });
+                          } else {
+                            print('login problem');
+                            print(email);
+                            print(password);
+                          }
+                        },
                       child: Text("Login",
                           style: TextStyle(
                               color: Colors.white,
@@ -109,11 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Color.fromARGB(255, 141, 141, 141),
                         )),
                     TextButton(
-                        onPressed: () {
+                        onPressed: ()  {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MySignUpPage()));
+                        
                         },
                         child: Text("sign up")),
                   ],
