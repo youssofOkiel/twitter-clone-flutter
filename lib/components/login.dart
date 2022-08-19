@@ -15,21 +15,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String email = "";
   String password = "";
-  bool flag = false;
-  void login() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .where('password', isEqualTo: password)
-        .get()
-        .then((value) => {
-              if (!(value.docs.isEmpty))
-                {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyFeedPage()))
-                }
-            });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             print('login success');
                             FirebaseAuth.instance.authStateChanges().listen((User? user) { 
                                 print(user!.uid);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                                  MyFeedPage(profileId: user.uid)
+                                ));
                             });
                           } else {
                             print('login problem');

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:twitterapp/Models/Tweet.dart';
+import 'package:twitterapp/Models/UserModel.dart';
+import 'package:twitterapp/Services/firebase.dart';
 
 class TweetContainer extends StatefulWidget {
   final Tweet tweet;
-  final UserModel author;
-  final String currentUserId;
+   UserModel? user;
+  final String profileId;
 
-  const TweetContainer({Key key, this.tweet, this.author, this.currentUserId})
+  TweetContainer({Key? key,required this.tweet ,this.profileId = ""})
       : super(key: key);
   @override
   _TweetContainerState createState() => _TweetContainerState();
@@ -18,7 +20,7 @@ class _TweetContainerState extends State<TweetContainer> {
 
   initTweetLikes() async {
     bool isLiked =
-        await DatabaseServices.isLikeTweet(widget.currentUserId, widget.tweet);
+        await FirebaseServices.isLikeTweet(widget.profileId, widget.tweet);
     if (mounted) {
       setState(() {
         _isLiked = isLiked;
@@ -28,13 +30,13 @@ class _TweetContainerState extends State<TweetContainer> {
 
   likeTweet() {
     if (_isLiked) {
-      DatabaseServices.unlikeTweet(widget.currentUserId, widget.tweet);
+      FirebaseServices.unlikeTweet(widget.profileId, widget.tweet);
       setState(() {
         _isLiked = false;
         _likesCount--;
       });
     } else {
-      DatabaseServices.likeTweet(widget.currentUserId, widget.tweet);
+      FirebaseServices.likeTweet(widget.profileId, widget.tweet);
       setState(() {
         _isLiked = true;
         _likesCount++;
@@ -45,7 +47,7 @@ class _TweetContainerState extends State<TweetContainer> {
   @override
   void initState() {
     super.initState();
-    _likesCount = widget.tweet.likes;
+    _likesCount = widget.tweet.likes.length;
     initTweetLikes();
   }
 
@@ -60,13 +62,11 @@ class _TweetContainerState extends State<TweetContainer> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: widget.author.profilePicture.isEmpty
-                    ? AssetImage('assets/placeholder.png')
-                    : NetworkImage(widget.author.profilePicture),
+                backgroundImage: NetworkImage("widget.user.photoURL"),
               ),
               SizedBox(width: 10),
               Text(
-                widget.author.name,
+                "widget.user.username!",
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class _TweetContainerState extends State<TweetContainer> {
                     Container(
                       height: 250,
                       decoration: BoxDecoration(
-                          color: KTweeterColor,
+                          color: Color(0xff00acee),
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                             fit: BoxFit.cover,
@@ -117,7 +117,7 @@ class _TweetContainerState extends State<TweetContainer> {
                 ],
               ),
               Text(
-                widget.tweet.timestamp.toDate().toString().substring(0, 19),
+                widget.tweet.timestamp.toString().substring(0, 19),
                 style: TextStyle(color: Colors.grey),
               )
             ],
