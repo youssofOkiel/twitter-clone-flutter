@@ -32,8 +32,14 @@ class FirebaseServices {
 
   static Future<dynamic> followingNum(String userId) async {
     var followersCount = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    return followersCount;
+    return followersCount['following'].length;
   }
+
+    static Future<dynamic> followersNum(String userId) async {
+    var followersCount = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    return followersCount['followers'].length;
+  }
+
   static void likeTweet(String currentUserId, Tweet tweet) {
     DocumentReference tweetDocProfile = FirebaseFirestore.instance
         .doc(tweet.senderId)
@@ -63,41 +69,12 @@ class FirebaseServices {
   }
 
   static void unlikeTweet(String currentUserId, Tweet tweet) {
-    DocumentReference tweetDocProfile = FirebaseFirestore.instance
-        .doc(tweet.senderId)
-        .collection('userTweets')
-        .doc(tweet.id);
-    tweetDocProfile.get().then((doc) {
-      // int likes = doc.data()['likes'];
-      // tweetDocProfile.update({'likes': likes - 1});
-    });
+       tweet.likes.remove(currentUserId);
 
-    DocumentReference tweetDocFeed = FirebaseFirestore.instance
-        .doc(currentUserId)
-        .collection('userFeed')
-        .doc(tweet.id);
-    tweetDocFeed.get().then((doc) {
-      if (doc.exists) {
-        // int likes = doc.data()['likes'];
-        // tweetDocFeed.update({'likes': likes - 1});
-      }
-    });
-
-    FirebaseFirestore.instance
-        .doc(tweet.id)
-        .collection('tweetLikes')
-        .doc(currentUserId)
-        .get()
-        .then((doc) => doc.reference.delete());
   }
 
-  static Future<bool> isLikeTweet(String currentUserId, Tweet tweet) async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .doc(tweet.id)
-        .collection('tweetLikes')
-        .doc(currentUserId)
-        .get();
+  static Future LikeTweet(String currentUserId, Tweet tweet) async {
+   tweet.likes.add(currentUserId);
 
-    return userDoc.exists;
   }
 }

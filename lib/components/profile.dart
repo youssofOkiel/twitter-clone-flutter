@@ -89,12 +89,20 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   getFollowersCount() async {
     int followersCount =
-        await FirebaseServices.followingNum(widget.visitedUserId);
-    if (mounted) {
+        await FirebaseServices.followersNum(widget.visitedUserId);
       setState(() {
         _followersCount = followersCount;
       });
-    }
+    
+  }
+
+    getFollowingCount() async {
+    int followingCount =
+        await FirebaseServices.followingNum(widget.visitedUserId);
+      setState(() {
+        _followingCount = followingCount;
+      });
+    
   }
 
   setupIsFollowing() async {
@@ -119,6 +127,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     getFollowersCount();
+    getFollowingCount();
     setupIsFollowing();
     getAllTweets();
   }

@@ -20,13 +20,15 @@ class _TweetContainerState extends State<TweetContainer> {
   bool _isLiked = false;
 
   initTweetLikes() async {
-    bool isLiked =
-        await FirebaseServices.isLikeTweet(widget.profileId, widget.tweet);
-    if (mounted) {
+    bool isLiked = false;
+    for(int i=0 ; i<widget.tweet.likes.length ; i++){
+      if(widget.tweet.likes[i] == widget.profileId){
+        isLiked = true;
+      }
+    }
       setState(() {
         _isLiked = isLiked;
       });
-    }
   }
 
   likeTweet() {
@@ -37,7 +39,7 @@ class _TweetContainerState extends State<TweetContainer> {
         _likesCount--;
       });
     } else {
-      FirebaseServices.likeTweet(widget.profileId, widget.tweet);
+      FirebaseServices.LikeTweet(widget.profileId, widget.tweet);
       setState(() {
         _isLiked = true;
         _likesCount++;
@@ -108,7 +110,7 @@ class _TweetContainerState extends State<TweetContainer> {
                   IconButton(
                     icon: Icon(
                       _isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: _isLiked ? Colors.blue : Colors.black,
+                      color: _isLiked ? Colors.red : Colors.black,
                     ),
                     onPressed: likeTweet,
                   ),
