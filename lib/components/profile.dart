@@ -24,7 +24,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   int _followersCount = 0;
   int _followingCount = 0;
   bool _isFollowing = false;
-  int _profileSegmentedValue = 0;
+  int? _profileSegmentedValue = 0;
   List  _allTweets = [];
 
   Map<int, Widget> _profileTabs = <int, Widget>{
@@ -142,6 +142,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               children: [
+                Text(widget.profileId),
                 Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -313,9 +314,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                           thumbColor:  Color(0xff00acee),
                           backgroundColor: Colors.blueGrey,
                           children: _profileTabs,
-                          onValueChanged: (i) {
+                          onValueChanged: (int? i) {
                             setState(() {
-                              _profileSegmentedValue = 0 ;
+                              _profileSegmentedValue = i ;
                             });
                           },
                         ),

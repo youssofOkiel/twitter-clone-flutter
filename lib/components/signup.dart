@@ -103,7 +103,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                     child: MaterialButton(
                       onPressed: () async {
                 bool isValid =
-                    await AuthService.signUp(username,email,password);
+                    await AuthService.signUp(displayName, username,email,password);
                 if (isValid) {
                   Navigator.pop(context);
                   print('signup success');
