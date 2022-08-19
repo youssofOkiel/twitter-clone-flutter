@@ -9,13 +9,13 @@ import 'package:twitterapp/Widgets/Button.dart';
 class TweetBox extends StatefulWidget {
   final String profileId;
 
-  const TweetBox({Key? key,required this.profileId}) : super(key: key);
+  const TweetBox({Key? key, required this.profileId}) : super(key: key);
   @override
   TweetBoxState createState() => TweetBoxState();
 }
 
 class TweetBoxState extends State<TweetBox> {
-  String tweetText ="";
+  String tweetText = "";
   bool loading = false;
 
   @override
@@ -23,7 +23,7 @@ class TweetBoxState extends State<TweetBox> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor:  Color(0xff00acee),
+        backgroundColor: Color(0xff00acee),
         centerTitle: true,
         title: Text(
           'Tweet',
@@ -48,46 +48,18 @@ class TweetBoxState extends State<TweetBox> {
                 tweetText = value;
               },
             ),
-            SizedBox(height: 10), Column(
-                    children: [
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                            color:  Color(0xff00acee),
-                            
-                      ),
-                      )
-                    ],
-                  ),
-            GestureDetector(
-              child: Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  border: Border.all(
-                    color:  Color(0xff00acee),
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 50,
-                  color:  Color(0xff00acee),
-                ),
-              ),
-            ),
             SizedBox(height: 20),
-            Button(
-              btnText: 'Tweet',
-              onBtnPressed: () async {
+            MaterialButton(
+              
+              child: Text('Tweet'),
+              
+              onPressed: () async {
                 setState(() {
                   loading = true;
                 });
-                if (tweetText != null && tweetText.isNotEmpty) { 
+                if (tweetText != null && tweetText.isNotEmpty) {
                   String image = '';
-                  
+
                   Tweet tweet = Tweet(
                     text: tweetText,
                     image: image,
@@ -103,8 +75,6 @@ class TweetBoxState extends State<TweetBox> {
                 });
               },
             ),
-            SizedBox(height: 20),
-            loading ? CircularProgressIndicator() : SizedBox.shrink()
           ],
         ),
       ),

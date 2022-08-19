@@ -4,16 +4,17 @@ import 'package:twitterapp/Models/UserModel.dart';
 
 class FirebaseServices {
   static void createTweet(Tweet tweet) {
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(tweet.senderId)
-        .set({'timestamp': tweet.timestamp});
+    String time ="";
+    if(tweet.timestamp == ""){
+        time = '8/19/2022, 11:29:13 PM';
+    }
     FirebaseFirestore.instance.collection('posts').add({
       'text': tweet.text,
       'image': tweet.image,
-      "authorId": tweet.senderId,
-      "timestamp": tweet.timestamp,
+      "senderId": tweet.senderId,
+      "timestamp": time,
       'likes': tweet.likes,
+      'altText' : ''
     });
   }
 
