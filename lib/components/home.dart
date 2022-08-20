@@ -79,8 +79,8 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-          child: SizedBox(),
+          backgroundColor: Colors.lightBlue,
+          child: Icon(Icons.add,color: Colors.white,),
           onPressed: () {
             Navigator.push(
                 context,
@@ -91,7 +91,7 @@ class HomeScreenState extends State<HomeScreen> {
           },
         ),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.lightBlue,
           elevation: 0.5,
           centerTitle: true,
           leading: Container(
@@ -101,7 +101,7 @@ class HomeScreenState extends State<HomeScreen> {
           title: Text(
             'Home',
             style: TextStyle(
-              color: Color(0xff00acee),
+              color: Colors.white,
             ),
           ),
         ),

@@ -215,66 +215,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                             radius: 45,
                             backgroundImage: NetworkImage(userModel.photoURL),
                           ),
-                          widget.profileId == widget.visitedUserId
-                              ? GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MyFeedPage(profileId: widget.profileId),
-                                      ),
-                                    );
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 35,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.white,
-                                      border: Border.all(color:  Color(0xff00acee)),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Edit',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          color:  Color(0xff00acee),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : GestureDetector(
-                                  child: Container(
-                                    width: 100,
-                                    height: 35,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: _isFollowing
-                                          ? Colors.white
-                                          :  Color(0xff00acee),
-                                      border: Border.all(color:  Color(0xff00acee)),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        _isFollowing ? 'Following' : 'Follow',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          color: _isFollowing
-                                              ?  Color(0xff00acee)
-                                              : Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
                         ],
                       ),
                       SizedBox(height: 10),

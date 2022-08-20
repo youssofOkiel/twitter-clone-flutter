@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Text(""),
         title: Text("Login"),
         elevation: 20,
         shadowColor: Colors.black,
@@ -78,6 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: TextFormField(
                         onChanged: (value) {
                           password = value;
+                        },
+                          validator: (String? value) {
+                          if (value == null || value.isEmpty)
+                            return 'Enter valid password';
+                          return (value.length < 8)
+                              ? 'password more or equal 8 char'
+                              : null;
                         },
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),

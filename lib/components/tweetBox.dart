@@ -39,8 +39,8 @@ class TweetBoxState extends State<TweetBox> {
           children: [
             SizedBox(height: 20),
             TextField(
-              maxLength: 280,
-              maxLines: 7,
+              maxLength: 300,
+              maxLines: 5,
               decoration: InputDecoration(
                 hintText: 'Enter your Tweet',
               ),
@@ -48,10 +48,21 @@ class TweetBoxState extends State<TweetBox> {
                 tweetText = value;
               },
             ),
-            SizedBox(height: 20),
             MaterialButton(
               
-              child: Text('Tweet'),
+                child: Container(
+                  color: Colors.lightBlue,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Tweet',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ),
               
               onPressed: () async {
                 setState(() {
