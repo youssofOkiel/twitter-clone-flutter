@@ -24,6 +24,8 @@ class AuthService {
           'bio': '',
           'followers': [],
           'following': [],
+          'is_active':true,
+          'verified':true
         });
         return true;
       }
