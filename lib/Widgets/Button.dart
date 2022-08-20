@@ -18,7 +18,7 @@ class Button extends StatelessWidget {
         height: 20,
         child: Text(
           'Tweet',
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20, backgroundColor:  Color(0xff00acee)),
         ),
       ),
     );

@@ -19,7 +19,7 @@ class AuthService {
           'username': username,
           'email': email,
           'photoURL': '',
-          'password':password,
+          'password': password,
           'wallpaper': '',
           'bio': '',
           'followers': [],

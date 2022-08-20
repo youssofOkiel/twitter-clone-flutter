@@ -115,7 +115,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   getAllTweets() async {
     List userTweets =
-        await FirebaseServices.getHomeTweets();
+        await FirebaseServices.getProfileTweets(widget.profileId);
     if (mounted) {
       setState(() {
         _allTweets = userTweets;
@@ -151,7 +151,6 @@ class ProfileScreenState extends State<ProfileScreen> {
               physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics()),
               children: [
-                Text(widget.profileId),
                 Container(
                   height: 150,
                   decoration: BoxDecoration(

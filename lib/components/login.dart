@@ -16,6 +16,18 @@ class _MyHomePageState extends State<MyHomePage> {
   String email = "";
   String password = "";
 
+  final _formKey = GlobalKey<FormState>();
+
+  Widget LoginValidation(email, passwor) {
+    var data = "";
+
+    if (email == "" || password == "") {
+      data = "email and password is requird";
+    }
+
+    return Text(data, style: TextStyle(color: Colors.red));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,61 +53,77 @@ class _MyHomePageState extends State<MyHomePage> {
                         "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/768px-Twitter-logo.svg.png?20211104142029",
                         scale: 7)),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: TextFormField(
-                  onChanged: (value) {
-                    email = value;
-                  },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return 'Enter valid email';
-                  },
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "email"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30, top: 30),
-                child: TextFormField(
-                  onChanged: (value) {
-                    password = value;
-                  },
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "password"),
-                  obscureText: true,
-                ),
-              ),
-              Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 25, 128, 212),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(7),
-                    child: MaterialButton(
-                      onPressed: () async {
-                          bool isValid = await AuthService.login(email, password);
-                          if (isValid) {
-                            print('login success');
-                            FirebaseAuth.instance.authStateChanges().listen((User? user) { 
-                                print(user!.uid);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => 
-                                  MyFeedPage(profileId: user.uid)
-                                ));
-                            });
-                          } else {
-                            print('login problem');
-                            print(email);
-                            print(password);
-                          }
+              Form(
+                  key: _formKey,
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), labelText: "email"),
+                        onChanged: (value) {
+                          email = value;
                         },
-                      child: Text("Login",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30)),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty)
+                            return 'Enter valid email';
+                          return (!value.contains('@'))
+                              ? 'plz use the @ char.'
+                              : null;
+                        },
+                      ),
                     ),
-                  )),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30, top: 30),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          password = value;
+                        },
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "password"),
+                        obscureText: true,
+                      ),
+                    ),
+                    Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 25, 128, 212),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(7),
+                          child: MaterialButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool isValid =
+                                    await AuthService.login(email, password);
+                                if (isValid) {
+                                  print('login success');
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((User? user) {
+                                    print(user!.uid);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MyFeedPage(
+                                                profileId: user.uid)));
+                                  });
+                                } else {
+                                  print('login problem');
+                                  print(email);
+                                  print(password);
+                                }
+                              }
+                            },
+                            child: Text("Login",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30)),
+                          ),
+                        )),
+                  ])),
               SizedBox(
                 height: 10,
               ),
@@ -109,12 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Color.fromARGB(255, 141, 141, 141),
                         )),
                     TextButton(
-                        onPressed: ()  {
+                        onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MySignUpPage()));
-                        
                         },
                         child: Text("sign up")),
                   ],

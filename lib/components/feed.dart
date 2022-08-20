@@ -32,9 +32,6 @@ class _MyFeedPageState extends State<MyFeedPage> {
         HomeScreen(
           profileId: widget.profileId,
         ),
-        HomeScreen(
-          profileId: widget.profileId,
-        ),
         ProfileScreen(
           profileId: widget.profileId,
           visitedUserId: widget.profileId,
@@ -50,7 +47,6 @@ class _MyFeedPageState extends State<MyFeedPage> {
         currentIndex: _selectedTab,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home)),
-          BottomNavigationBarItem(icon: Icon(Icons.search)),
           BottomNavigationBarItem(icon: Icon(Icons.notifications)),
           BottomNavigationBarItem(icon: Icon(Icons.person)),
         ],
